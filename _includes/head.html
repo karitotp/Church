@@ -1,0 +1,53 @@
+<head>
+   <meta charset="utf-8">
+   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.js'></script>
+   <script src='place_of_worship.geojson'></script>
+   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.css' rel='stylesheet' />
+   <meta name="viewport" content="width=device-width initial-scale=1" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+   <meta name="description" content="{{ site.description }}">
+
+   <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
+   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+   </head>
+
+   <style>
+     body { margin:0; padding:0; }
+     #map { position:absolute; top:0; bottom:0; width:100%; }
+   </style>
+
+   <div id='map'></div>
+
+<script>
+L.mapbox.accessToken = 'pk.eyJ1Ijoia2FyaXRvdHAiLCJhIjoib0ppeVhnWSJ9.JOLM9BQLqtI_bjvNzjNPew';
+
+for (var i = 0; i < church.features.length; i++) {
+    church.features[i].properties["title"]= church.features[i].properties.name;
+
+    if(church.features[i].geometry.type === "LineString"){
+      church.features[i].geometry.type ="Point";
+       church.features[i].geometry.coordinates = church.features[i].geometry.coordinates[0];
+
+}
+
+    church.features[i].properties["marker-color"]= "#049cdb";
+    church.features[i].properties["marker-symbol"]= "religious-christian";
+    church.features[i].properties["description"] = '<img width="200px" src="'+church.features[i].properties.image +'"></img>';
+      
+     //};
+
+}
+
+L.mapbox.map('map', 'examples.map-i86nkdio')
+  .setView([-13.1, -74.2], 10)
+  .featureLayer.setGeoJSON(church);
+
+
+</script>
+               
+
+
+
